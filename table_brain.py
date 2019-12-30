@@ -1,7 +1,7 @@
 import abc
 import numpy as np
 
-from agent import Transaction
+from transaction import Transaction
 
 
 class Brain:

@@ -1,6 +1,7 @@
 import gym
 
-from agent import Agent, Transaction
+from agent import Agent
+from transaction import Transaction
 
 
 class Environment:
@@ -24,7 +25,6 @@ class Environment:
     def run(self):
         # 195step以上連続で立ち続けた試行数
         complete_episodes = 0
-        is_episode_finished = False
 
         # 1episodeはゴールするまでの期間、
         # 1stepは現在の状況に応じ次の選択をする期間、
@@ -51,7 +51,7 @@ class Environment:
                     reward = 0
 
                 # step+1の状態observation_nextを用いて、Q関数を更新する
-                self.agent.update_Q_function(Transaction(observation, action, reward, observation_next))
+                self.agent.update_q_function(Transaction(observation, action, reward, observation_next))
 
                 observation = observation_next
 
@@ -61,5 +61,3 @@ class Environment:
 
             if complete_episodes >= 10:
                 print("10回連続成功")
-                is_episode_finished = True
-
