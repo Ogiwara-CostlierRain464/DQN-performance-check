@@ -11,6 +11,7 @@ from transition import Transition
 
 warnings.filterwarnings("ignore")
 
+
 class NNBrain(Brain):
     capacity = 10000
     batch_size = 32
@@ -74,22 +75,22 @@ class NNBrain(Brain):
         loss.backward()
         self.optimizer.step()
 
-    def update_q_function(self, transition: Transition):
+    def update_q_function(self, trn: Transition):
         # 変換が必要
 
-        state = torch\
-            .from_numpy(transition.state)\
-            .type(torch.FloatTensor)\
+        state = torch \
+            .from_numpy(trn.state) \
+            .type(torch.FloatTensor) \
             .unsqueeze(0)
 
-        action = torch.LongTensor([[transition.action]])
+        action = torch.LongTensor([[trn.action]])
 
-        next_state = torch\
-            .from_numpy(transition.next_state)\
-            .type(torch.FloatTensor)\
+        next_state = torch \
+            .from_numpy(trn.next_state) \
+            .type(torch.FloatTensor) \
             .unsqueeze(0)
 
-        reward = torch.FloatTensor([transition.reward])
+        reward = torch.FloatTensor([trn.reward])
 
         trn = Transition(
             state=state,
@@ -101,11 +102,11 @@ class NNBrain(Brain):
         self.memory.push(trn)
         self.__replay()
 
-    def decide_action(self, observation, episode):
+    def decide_action(self, state, episode):
         # 変換が必要
-        observation = torch\
-            .from_numpy(observation)\
-            .type(torch.FloatTensor)\
+        state = torch \
+            .from_numpy(state) \
+            .type(torch.FloatTensor) \
             .unsqueeze(0)
 
         epsilon = 0.5 * (1 / (episode + 1))
@@ -114,7 +115,7 @@ class NNBrain(Brain):
             self.model.eval()
 
             with torch.no_grad():
-                action = self.model(observation).max(1)[1].view(1, 1)
+                action = self.model(state).max(1)[1].view(1, 1)
         else:
             action = torch.LongTensor([[random.randrange(self.num_actions)]])
 

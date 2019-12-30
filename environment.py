@@ -1,6 +1,5 @@
 import gym
 from transition import Transition
-
 from agent import Agent
 
 
@@ -31,13 +30,13 @@ class Environment:
         # 1stepは現在の状況に応じ次の選択をする期間、
         # を表す
         for episode in range(self.num_episodes):
-            observation = self.env.reset()
+            state = self.env.reset()
 
             for step in range(self.max_steps):
                 # 行動を求める
-                action = self.agent.get_action(observation, episode)
+                action = self.agent.get_action(state, episode)
                 # 行動a_tの実行により、s_{t+1}, r_{t+1}を求める
-                observation_next, _, done, _ = self.env.step(action)
+                next_state, _, done, _ = self.env.step(action)
 
                 # 報酬を与える
                 if done:
@@ -52,9 +51,9 @@ class Environment:
                     reward = 0
 
                 # step+1の状態observation_nextを用いて、Q関数を更新する
-                self.agent.update_q_function(Transition(observation, action, observation_next, reward))
+                self.agent.update_q_function(Transition(state, action, next_state, reward))
 
-                observation = observation_next
+                state = next_state
 
                 if done:
                     print("{0} episode finished after {1} time steps".format(episode, step + 1))

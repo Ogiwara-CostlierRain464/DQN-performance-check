@@ -6,11 +6,11 @@ from transition import Transition
 
 class Brain:
     @abc.abstractmethod
-    def update_q_function(self, transaction: Transition):
+    def update_q_function(self, trn: Transition):
         pass
 
     @abc.abstractmethod
-    def decide_action(self, observation, step):
+    def decide_action(self, state, step):
         pass
 
 
@@ -39,9 +39,9 @@ class TableBrain(Brain):
         # so, [0:2] is same as [0,2)
         return np.linspace(clip_min, clip_max, num + 1)[1:-1]
 
-    def __digitize_state(self, observation: np.ndarray) -> float:
+    def __digitize_state(self, state: np.ndarray) -> float:
         """観測したobservation状態を、離散値に変換する"""
-        cart_pos, cart_v, pole_angle, pole_v = observation
+        cart_pos, cart_v, pole_angle, pole_v = state
         digitized = [
             np.digitize(cart_pos, bins=self.__bins(-2.4, 2.4, self.num_digitized)),
             np.digitize(cart_v, bins=self.__bins(-3.0, 3.0, self.num_digitized)),
@@ -58,9 +58,9 @@ class TableBrain(Brain):
             self.q_table[state, trn.action] + self.eta * (
                         trn.reward + self.gamma * max_q_next - self.q_table[state, trn.action])
 
-    def decide_action(self, observation: np.ndarray, episode: int) -> int:
+    def decide_action(self, state: np.ndarray, episode: int) -> int:
         """ε-greedy法で徐々に最適行動のみを採用する"""
-        state = self.__digitize_state(observation)
+        state = self.__digitize_state(state)
         epsilon = 0.5 * (1 / (episode + 1))
 
         if epsilon <= np.random.uniform(0, 1):
