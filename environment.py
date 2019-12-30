@@ -25,6 +25,7 @@ class Environment:
     def run(self):
         # 195step以上連続で立ち続けた試行数
         complete_episodes = 0
+        is_episode_finished = False
 
         # 1episodeはゴールするまでの期間、
         # 1stepは現在の状況に応じ次の選択をする期間、
@@ -59,5 +60,9 @@ class Environment:
                     print("{0} episode finished after {1} time steps".format(episode, step + 1))
                     break
 
+            if is_episode_finished:
+                break
+
             if complete_episodes >= 10:
                 print("10回連続成功")
+                is_episode_finished = True

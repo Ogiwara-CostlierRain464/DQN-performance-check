@@ -33,9 +33,13 @@ class TableBrain(Brain):
     @staticmethod
     def __bins(clip_min, clip_max, num):
         """観測した状態(連続値)を離散値にデジタル変換する閾値を求める"""
+        # example
+        # lin_space(0,1,3) => [0, 0.5, 1]
+        # lin_space(0,1,3)[0:2] => [0, 0.5]
+        # so, [0:2] is same as [0,2)
         return np.linspace(clip_min, clip_max, num + 1)[1:-1]
 
-    def __digitize_state(self, observation):
+    def __digitize_state(self, observation: np.ndarray) -> float:
         """観測したobservation状態を、離散値に変換する"""
         cart_pos, cart_v, pole_angle, pole_v = observation
         digitized = [
@@ -46,7 +50,7 @@ class TableBrain(Brain):
         ]
         return sum([x * (self.num_digitized ** i) for i, x in enumerate(digitized)])
 
-    def update_q_function(self, trn: Transaction):
+    def update_q_function(self, trn: Transaction) -> None:
         state = self.__digitize_state(trn.observation)
         state_next = self.__digitize_state(trn.observation_next)
         max_q_next = max(self.q_table[state_next][:])
@@ -54,12 +58,14 @@ class TableBrain(Brain):
             self.q_table[state, trn.action] + self.eta * (
                         trn.reward + self.gamma * max_q_next - self.q_table[state, trn.action])
 
-    def decide_action(self, observation, episode):
+    def decide_action(self, observation: np.ndarray, episode: int) -> int:
         """ε-greedy法で徐々に最適行動のみを採用する"""
         state = self.__digitize_state(observation)
         epsilon = 0.5 * (1 / (episode + 1))
 
-        if episode <= np.random.uniform(0, 1):
+        if epsilon <= np.random.uniform(0, 1):
+            # example: np.argmax([0,2,1]) => 1
+            # argmax returns the indices of the maximum values.
             action = np.argmax(self.q_table[state][:])
         else:
             action = np.random.choice(self.num_actions)
