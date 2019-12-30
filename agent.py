@@ -7,6 +7,7 @@ from nn_brain import NNBrain
 
 class Agent:
     def __init__(self, num_states, num_actions):
+        # self.brain = TableBrain(num_states, num_actions)
         self.brain = NNBrain(num_states, num_actions)
 
     def update_q_function(self, trn) -> None:
