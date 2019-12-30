@@ -1,12 +1,12 @@
 import abc
 import numpy as np
 
-from transaction import Transaction
+from transition import Transition
 
 
 class Brain:
     @abc.abstractmethod
-    def update_q_function(self, transaction: Transaction):
+    def update_q_function(self, transaction: Transition):
         pass
 
     @abc.abstractmethod
@@ -50,7 +50,7 @@ class TableBrain(Brain):
         ]
         return sum([x * (self.num_digitized ** i) for i, x in enumerate(digitized)])
 
-    def update_q_function(self, trn: Transaction) -> None:
+    def update_q_function(self, trn: Transition) -> None:
         state = self.__digitize_state(trn.observation)
         state_next = self.__digitize_state(trn.observation_next)
         max_q_next = max(self.q_table[state_next][:])

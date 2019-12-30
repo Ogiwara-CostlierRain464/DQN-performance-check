@@ -4,7 +4,7 @@ from torch import optim
 from typing import List
 
 from table_brain import Brain
-from transaction import Transaction
+from transition import Transition
 
 
 class NNBrain(Brain):
@@ -35,7 +35,7 @@ class NNBrain(Brain):
         trns = self.memory.sample(self.batch_size)
 
 
-    def update_q_function(self, transaction: Transaction):
+    def update_q_function(self, transaction: Transition):
         pass
 
     def decide_action(self, observation, step):
@@ -48,7 +48,7 @@ class ReplayMemory:
         self.memory = []
         self.index = 0
 
-    def push(self, trn: Transaction):
+    def push(self, trn: Transition):
         if len(self) < self.capacity:
             self.memory.append(None)
 
@@ -56,7 +56,7 @@ class ReplayMemory:
         # self.index+1がself.capacityをオーバーしたらindexを0に初期化
         self.index = (self.index + 1) % self.capacity
 
-    def sample(self, batch_size: int) -> List[Transaction]:
+    def sample(self, batch_size: int) -> List[Transition]:
         return random.sample(self.memory, batch_size)
 
     def __len__(self):
