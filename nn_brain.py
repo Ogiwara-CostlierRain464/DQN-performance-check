@@ -74,7 +74,30 @@ class NNBrain(Brain):
         self.optimizer.step()
 
     def update_q_function(self, transition: Transition):
-        self.memory.push(transition)
+        # 変換が必要
+
+        state = torch\
+            .from_numpy(transition.state)\
+            .type(torch.FloatTensor)\
+            .unsqueeze(0)
+
+        action = transition.action
+
+        next_state = torch\
+            .from_numpy(transition.next_state)\
+            .type(torch.FloatTensor)\
+            .unsqueeze(0)
+
+        reward = torch.FloatTensor([transition.reward])
+
+        trn = Transition(
+            state=state,
+            action=action,
+            next_state=next_state,
+            reward=reward
+        )
+
+        self.memory.push(trn)
         self.__replay()
 
     def decide_action(self, observation, episode):
@@ -94,7 +117,7 @@ class NNBrain(Brain):
         else:
             action = torch.LongTensor([[random.randrange(self.num_actions)]])
 
-        return action
+        return action.item()
 
 
 class ReplayMemory:
