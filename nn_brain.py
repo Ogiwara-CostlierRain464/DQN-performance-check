@@ -35,7 +35,7 @@ class NNBrain(Brain):
             lr=0.0001
         )
 
-    def __replay(self):
+    def __replay(self) -> None:
         if len(self.memory) < self.batch_size:
             return
 

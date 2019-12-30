@@ -1,16 +1,16 @@
 import abc
 import numpy as np
-
 from transition import Transition
+from typing import Union
 
 
 class Brain:
     @abc.abstractmethod
-    def update_q_function(self, trn: Transition):
+    def update_q_function(self, trn: Transition) -> None:
         pass
 
     @abc.abstractmethod
-    def decide_action(self, state, step):
+    def decide_action(self, state: np.ndarray, step) -> Union[int, float, bool]:
         pass
 
 
@@ -31,7 +31,7 @@ class TableBrain(Brain):
         )
 
     @staticmethod
-    def __bins(clip_min, clip_max, num):
+    def __bins(clip_min, clip_max, num) -> np.ndarray:
         """観測した状態(連続値)を離散値にデジタル変換する閾値を求める"""
         # example
         # lin_space(0,1,3) => [0, 0.5, 1]
