@@ -1,0 +1,2 @@
+class NNBrain:
+    pass
