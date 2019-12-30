@@ -73,11 +73,17 @@ class NNBrain(Brain):
         loss.backward()
         self.optimizer.step()
 
-
     def update_q_function(self, transition: Transition):
-        pass
+        self.memory.push(transition)
+        self.__replay()
 
     def decide_action(self, observation, episode):
+        # 変換が必要
+        observation = torch\
+            .from_numpy(observation)\
+            .type(torch.FloatTensor)\
+            .unsqueeze(0)
+
         epsilon = 0.5 * (1 / (episode + 1))
 
         if epsilon <= np.random.uniform(0, 1):
@@ -86,9 +92,10 @@ class NNBrain(Brain):
             with torch.no_grad():
                 action = self.model(observation).max(1)[1].view(1, 1)
         else:
-            action = torch.LongTensor([[ random.randrange(self.num_actions) ]])
+            action = torch.LongTensor([[random.randrange(self.num_actions)]])
 
         return action
+
 
 class ReplayMemory:
     def __init__(self, capacity):
