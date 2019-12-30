@@ -51,8 +51,8 @@ class TableBrain(Brain):
         return sum([x * (self.num_digitized ** i) for i, x in enumerate(digitized)])
 
     def update_q_function(self, trn: Transition) -> None:
-        state = self.__digitize_state(trn.observation)
-        state_next = self.__digitize_state(trn.observation_next)
+        state = self.__digitize_state(trn.state)
+        state_next = self.__digitize_state(trn.next_state)
         max_q_next = max(self.q_table[state_next][:])
         self.q_table[state, trn.action] = \
             self.q_table[state, trn.action] + self.eta * (

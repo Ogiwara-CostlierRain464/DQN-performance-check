@@ -1,5 +1,5 @@
 import gym
-from .transition import Transition
+from transition import Transition
 
 from agent import Agent
 
@@ -52,7 +52,7 @@ class Environment:
                     reward = 0
 
                 # step+1の状態observation_nextを用いて、Q関数を更新する
-                self.agent.update_q_function(Transition(observation, action, reward, observation_next))
+                self.agent.update_q_function(Transition(observation, action, observation_next, reward))
 
                 observation = observation_next
 

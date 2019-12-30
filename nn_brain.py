@@ -34,8 +34,7 @@ class NNBrain(Brain):
 
         trns = self.memory.sample(self.batch_size)
 
-
-    def update_q_function(self, transaction: Transition):
+    def update_q_function(self, transition: Transition):
         pass
 
     def decide_action(self, observation, step):
