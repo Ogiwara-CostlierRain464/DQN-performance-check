@@ -5,10 +5,11 @@ from torch import nn
 from torch import optim
 from typing import List
 import numpy as np
-
+import warnings
 from table_brain import Brain
 from transition import Transition
 
+warnings.filterwarnings("ignore")
 
 class NNBrain(Brain):
     capacity = 10000
@@ -81,7 +82,7 @@ class NNBrain(Brain):
             .type(torch.FloatTensor)\
             .unsqueeze(0)
 
-        action = transition.action
+        action = torch.LongTensor([[transition.action]])
 
         next_state = torch\
             .from_numpy(transition.next_state)\
