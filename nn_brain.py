@@ -35,7 +35,7 @@ class NNBrain(Brain):
             lr=0.0001
         )
 
-    def __replay(self) -> None:
+    def _replay(self) -> None:
         if len(self.memory) < self.batch_size:
             return
 
@@ -100,7 +100,7 @@ class NNBrain(Brain):
         )
 
         self.memory.push(trn)
-        self.__replay()
+        self._replay()
 
     def decide_action(self, state, episode):
         # 変換が必要

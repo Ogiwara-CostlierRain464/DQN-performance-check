@@ -58,7 +58,7 @@ class Environment:
                 state = next_state
 
                 if done:
-                    #print("{0} episode finished after {1} time steps".format(episode, step + 1))
+                    # print("{0} episode finished after {1} time steps".format(episode, step + 1))
                     break
 
             if is_episode_finished:
