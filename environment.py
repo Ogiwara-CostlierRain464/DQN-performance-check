@@ -23,6 +23,7 @@ class Environment:
 
     def run(self):
         # 195step以上連続で立ち続けた試行数
+        took_steps = 0
         complete_episodes = 0
         is_episode_finished = False
 
@@ -52,16 +53,17 @@ class Environment:
 
                 # step+1の状態observation_nextを用いて、Q関数を更新する
                 self.agent.update_q_function(Transition(state, action, next_state, reward))
+                took_steps += 1
 
                 state = next_state
 
                 if done:
-                    print("{0} episode finished after {1} time steps".format(episode, step + 1))
+                    #print("{0} episode finished after {1} time steps".format(episode, step + 1))
                     break
 
             if is_episode_finished:
                 break
 
             if complete_episodes >= 10:
-                print("10回連続成功")
+                print("10回連続成功 {0}stepで".format(took_steps))
                 is_episode_finished = True
