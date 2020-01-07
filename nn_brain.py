@@ -24,11 +24,12 @@ class NNBrain(Brain):
 
         self.model = nn.Sequential()
         # 4in -> 32out
-        self.model.add_module("fc1", nn.Linear(num_states, 32))
+        unit_num = 16
+        self.model.add_module("fc1", nn.Linear(num_states, unit_num))
         self.model.add_module("relu1", nn.ReLU())
-        self.model.add_module("fc2", nn.Linear(32, 32))
+        self.model.add_module("fc2", nn.Linear(unit_num, unit_num))
         self.model.add_module("relu2", nn.ReLU())
-        self.model.add_module("fc3", nn.Linear(32, num_actions))
+        self.model.add_module("fc3", nn.Linear(unit_num, num_actions))
 
         self.optimizer = optim.Adam(
             self.model.parameters(),
